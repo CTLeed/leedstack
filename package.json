@@ -1,0 +1,60 @@
+{
+  "name": "leedstack",
+  "version": "3.1.0",
+  "description": "One-command scaffolder for full-stack web applications with 60+ stack combinations (React/Vue/Next.js/Svelte/Angular + Python/Node/Java/Go + Postgres/MySQL/MongoDB)",
+  "type": "module",
+  "bin": {
+    "leedstack": "./bin/create-stack.js"
+  },
+  "files": [
+    "bin",
+    "tools"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "keywords": [
+    "scaffolder",
+    "scaffold",
+    "generator",
+    "full-stack",
+    "cli",
+    "template",
+    "boilerplate",
+    "react",
+    "vue",
+    "vuejs",
+    "nextjs",
+    "next.js",
+    "svelte",
+    "angular",
+    "python",
+    "fastapi",
+    "spring-boot",
+    "express",
+    "nodejs",
+    "go",
+    "postgres",
+    "postgresql",
+    "mysql",
+    "mongodb",
+    "auth0",
+    "stripe",
+    "typescript"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CTLeed/leedstack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CTLeed/leedstack/issues"
+  },
+  "homepage": "https://github.com/CTLeed/leedstack#readme",
+  "author": "Colby Leed",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.0.0",
+    "fs-extra": "^11.2.0",
+    "ejs": "^3.1.9"
+  }
+}

@@ -1,0 +1,11 @@
+# Exclude test/dev artifacts
+node_modules/
+my-app/
+test-app/
+test-*/
+sample-*/
+*.log
+
+# Keep these for distribution
+!tools/
+!bin/

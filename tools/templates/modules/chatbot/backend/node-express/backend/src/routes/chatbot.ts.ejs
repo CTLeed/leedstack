@@ -1,0 +1,37 @@
+import { Router, Request, Response } from 'express';
+import { ChatbotService } from '../services/chatbotService';
+
+const router = Router();
+const chatbotService = new ChatbotService();
+
+interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+interface ChatRequest {
+  message: string;
+  history?: ChatMessage[];
+}
+
+router.post('/', async (req: Request, res: Response) => {
+  try {
+    const { message, history = [] }: ChatRequest = req.body;
+
+    if (!message || typeof message !== 'string') {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+
+    const response = await chatbotService.generateResponse(message, history);
+
+    res.json({ message: response });
+  } catch (error) {
+    console.error('Chatbot error:', error);
+    res.status(500).json({
+      error: 'Failed to generate response',
+      message: 'Sorry, I encountered an error. Please try again.'
+    });
+  }
+});
+
+export default router;

@@ -1,0 +1,39 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  application:
+    name: <%= appSlug %>-backend
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:<%= appSlug %>_dev}
+    username: ${DB_USER:<%= appSlug %>}
+    password: ${DB_PASSWORD:password}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+    show-sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+<% if (modules.auth) { -%>
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://${AUTH0_DOMAIN}/
+          audiences: ${AUTH0_AUDIENCE}
+<% } -%>
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

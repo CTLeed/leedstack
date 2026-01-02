@@ -1,0 +1,118 @@
+# <%= AppName %>
+
+Generated via `create-stack`.
+
+## Stack
+
+- **Frontend**: <%= frontend %>
+- **Backend**: <%= backend %>
+- **Database**: <%= db %>
+<% if (modules.auth) { -%>
+- **Auth**: <%= auth %>
+<% } -%>
+<% if (modules.payments) { -%>
+- **Payments**: <%= payments %>
+<% } -%>
+
+## Quickstart
+
+```bash
+# Start the database
+docker compose up -d
+
+# Backend
+cd backend
+<% if (backend === 'java-spring') { -%>
+# Java 21 required
+mvn spring-boot:run
+<% } else if (backend === 'node-express') { -%>
+# Node >=20 required
+npm install
+npm run dev
+<% } else if (backend === 'go-echo') { -%>
+# Go >=1.22 required
+go run ./cmd/server
+<% } -%>
+
+# Frontend (in a new terminal)
+cd ../frontend
+cp .env.example .env
+npm install
+npm run dev
+```
+<% if (modules.auth) { -%>
+
+## Auth0 Setup
+
+1. Create a **Single Page Application** in Auth0
+2. Configure settings:
+   - **Allowed Callback URLs**: `http://localhost:5173/callback`
+   - **Allowed Logout URLs**: `http://localhost:5173`
+   - **Allowed Web Origins**: `http://localhost:5173`
+3. Create an **API** in Auth0:
+   - **Identifier**: `https://api.<%= appSlug %>`
+   - Enable **RBAC**
+<% if (modules.admin) { -%>
+   - Add `admin` permission
+<% } -%>
+4. Update `.env` files with Auth0 credentials:
+   - `PUBLIC_AUTH0_DOMAIN`
+   - `PUBLIC_AUTH0_CLIENT_ID`
+   - `PUBLIC_AUTH0_AUDIENCE`
+   - `AUTH0_DOMAIN` (backend)
+   - `AUTH0_AUDIENCE` (backend)
+<% } -%>
+<% if (modules.payments) { -%>
+
+## Stripe Setup
+
+1. Get your Stripe secret key from the [Stripe Dashboard](https://dashboard.stripe.com/test/apikeys)
+2. Set `STRIPE_SECRET_KEY` in backend `.env`
+3. Create a product and price in Stripe, note the price ID
+4. For webhook testing in development:
+   ```bash
+   stripe listen --forward-to localhost:8080/stripe/webhook
+   ```
+5. Set `STRIPE_WEBHOOK_SECRET` from the CLI output
+<% } -%>
+
+## Endpoints
+
+<% if (modules.contact) { -%>
+- `POST /api/contact` - Submit contact message
+<% } -%>
+<% if (modules.admin) { -%>
+- `GET /api/admin/stats` - Get admin statistics (requires `admin` scope)
+<% } -%>
+<% if (modules.payments) { -%>
+- `POST /api/payments/create-checkout-session` - Create Stripe checkout session
+- `POST /stripe/webhook` - Stripe webhook handler (public)
+<% } -%>
+<% if (backend === 'java-spring') { -%>
+- `GET /actuator/health` - Health check
+<% } else { -%>
+- `GET /health` - Health check
+<% } -%>
+
+## Efficiency & Production Notes
+
+**Frontend**:
+- SSR enabled where applicable
+- Code-split routes
+<% if (modules.admin) { -%>
+- Admin module lazy-loaded
+<% } -%>
+- Minimal dependencies
+
+**Backend**:
+- JSON-only API
+- JWT validation via JWKS
+<% if (backend === 'java-spring') { -%>
+- Flyway migrations for schema management
+<% } else if (backend === 'node-express' && db !== 'mongodb') { -%>
+- Prisma migrations for schema management
+<% } -%>
+
+**Docker**:
+- Development uses only DB container
+- For production, use multi-stage builds with minimal base images

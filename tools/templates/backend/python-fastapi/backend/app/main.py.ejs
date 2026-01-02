@@ -1,0 +1,68 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+<% if (modules.auth) { -%>
+from app.middleware.auth import AuthMiddleware
+<% } -%>
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+app = FastAPI(title="<%= AppName %> API")
+
+# CORS configuration - allow only the configured frontend URL
+allowed_origins = [os.getenv("FRONTEND_URL", "")]
+allowed_origins = [origin.strip() for origin in allowed_origins if origin and origin.strip()]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+<% if (modules.auth) { -%>
+# Auth middleware for /api routes
+# app.middleware("http")(AuthMiddleware())
+
+<% } -%>
+@app.get("/health")
+@app.get("/actuator/health")
+async def health():
+    return {"status": "UP"}
+
+@app.get("/api/example")
+async def example():
+    from datetime import datetime
+    return {
+        "message": "Hello from <%= backend %> backend!",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+<% if (modules.contact) { -%>
+# Import contact router when created
+# from app.routers import contact
+# app.include_router(contact.router, prefix="/api")
+
+<% } -%>
+<% if (modules.admin) { -%>
+# Import admin router when created
+# from app.routers import admin
+# app.include_router(admin.router, prefix="/api")
+
+<% } -%>
+<% if (modules.payments) { -%>
+# Import payments router when created
+# from app.routers import payments
+# app.include_router(payments.router, prefix="/api")
+
+<% } -%>
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.getenv("APP_PORT", 8080))
+    print(f"✅ Server running on http://localhost:{port}")
+    print(f"📍 API available at http://localhost:{port}/api")
+    print(f"🏥 Health check at http://localhost:{port}/health")
+    print(f"📚 API docs at http://localhost:{port}/docs")
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port, reload=True)

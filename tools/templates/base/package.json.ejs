@@ -1,0 +1,30 @@
+{
+  "name": "<%= appSlug %>",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'Starting development servers...' && npm-run-all --parallel dev:*",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm-run-all --parallel install:*",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "build": "npm-run-all build:*",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "setup": "npm run install:all && echo '✅ All dependencies installed!'",
+    "start": "npm-run-all --parallel start:*",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm start",
+    "clean": "npm-run-all clean:*",
+    "clean:backend": "cd backend && rm -rf node_modules dist build",
+    "clean:frontend": "cd frontend && rm -rf node_modules dist build .next",
+    "reset": "npm run clean && npm run install:all"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

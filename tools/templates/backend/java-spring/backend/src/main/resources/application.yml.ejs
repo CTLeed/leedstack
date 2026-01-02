@@ -1,0 +1,20 @@
+server:
+  port: ${APP_PORT:8080}
+
+spring:
+  application:
+    name: <%= appSlug %>-backend
+<% if (modules.auth) { -%>
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://${AUTH0_DOMAIN}/
+          audiences: ${AUTH0_AUDIENCE}
+<% } -%>
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

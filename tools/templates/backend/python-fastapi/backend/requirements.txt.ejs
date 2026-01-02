@@ -1,0 +1,22 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+<% if (modules.auth) { -%>
+python-jose[cryptography]>=3.3.0
+requests>=2.32.0
+<% } -%>
+<% if (modules.payments) { -%>
+stripe>=11.0.0
+<% } -%>
+<% if (db === 'postgres' || db === 'mysql') { -%>
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+<% if (db === 'postgres') { -%>
+psycopg2-binary>=2.9.0
+<% } else { -%>
+pymysql>=1.1.0
+<% } -%>
+<% } else { -%>
+motor>=3.6.0
+<% } -%>

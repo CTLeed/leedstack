@@ -1,0 +1,15 @@
+node_modules/
+*.log
+.DS_Store
+*.tgz
+
+# Test projects generated during development
+my-app/
+test-app/
+sample-*/
+test-*/
+test-connection/
+
+# Local artifacts and media
+leedstack-pro-templates.zip
+screenshots/

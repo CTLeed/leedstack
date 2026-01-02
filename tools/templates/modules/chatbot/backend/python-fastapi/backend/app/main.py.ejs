@@ -1,0 +1,69 @@
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime
+import os
+<% if (modules.auth) { -%>
+from app.routes import auth
+<% } -%>
+<% if (modules.payments) { -%>
+from app.routes import stripe
+<% } -%>
+<% if (modules.contact) { -%>
+from app.routes import contact
+<% } -%>
+<% if (modules.admin) { -%>
+from app.routes import admin
+<% } -%>
+from app.routes import chatbot
+
+app = FastAPI(
+    title="<%= AppName %> API",
+    description="API for <%= appName %>",
+    version="1.0.0"
+)
+
+# CORS configuration
+allowed_origins = [
+    "http://localhost:5173",  # Vite default
+    "http://localhost:3000",  # Next.js default
+    os.getenv("FRONTEND_URL", "")
+]
+allowed_origins = [origin for origin in allowed_origins if origin]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins if os.getenv("NODE_ENV") != "development" else ["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/api/example")
+async def example():
+    """Example API endpoint"""
+    return {
+        "message": "Hello from python-fastapi backend!",
+        "timestamp": datetime.utcnow().isoformat()
+    }
+
+# Module routes
+<% if (modules.auth) { -%>
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+<% } -%>
+<% if (modules.payments) { -%>
+app.include_router(stripe.router, prefix="/stripe", tags=["stripe"])
+<% } -%>
+<% if (modules.contact) { -%>
+app.include_router(contact.router, prefix="/api/contact", tags=["contact"])
+<% } -%>
+<% if (modules.admin) { -%>
+app.include_router(admin.router, prefix="/api/admin", tags=["admin"])
+<% } -%>
+app.include_router(chatbot.router, prefix="/api/chatbot", tags=["chatbot"])
+
+@app.on_event("startup")
+async def startup_event():
+    print("✅ Server running on http://localhost:8080")
+    print("📡 API endpoint: http://localhost:8080/api/example")
+    print("💬 Chatbot endpoint: http://localhost:8080/api/chatbot")
+    print("📚 API docs: http://localhost:8080/docs")

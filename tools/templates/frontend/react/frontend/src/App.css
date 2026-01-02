@@ -1,0 +1,65 @@
+:root {
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.app {
+  display: grid;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header img {
+  width: 40px;
+  height: 40px;
+}
+
+.card {
+  padding: 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.api-status {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.logo {
+  height: 48px;
+  width: 48px;
+  padding: 6px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+.logo.react {
+  box-shadow: 0 0 0 2px rgba(97, 218, 251, 0.25);
+}
+
+.read-the-docs {
+  color: #64748b;
+}

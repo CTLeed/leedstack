@@ -1,0 +1,64 @@
+package com.app.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+<% if (modules.auth) { -%>
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+<% } -%>
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.*;
+
+import java.util.List;
+
+@Configuration
+<% if (modules.auth && modules.admin) { -%>
+@EnableMethodSecurity
+<% } -%>
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable());
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        http.authorizeHttpRequests(auth -> auth
+            .requestMatchers("/actuator/health"<% if (modules.payments) { %>, "/stripe/webhook"<% } %>).permitAll()
+<% if (modules.admin) { -%>
+            .requestMatchers("/api/admin/**").hasAuthority("SCOPE_admin")
+<% } -%>
+<% if (modules.auth) { -%>
+            .anyRequest().authenticated()
+<% } else { -%>
+            .anyRequest().permitAll()
+<% } -%>
+        );
+
+<% if (modules.auth) { -%>
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {}));
+<% } -%>
+
+        return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Allow only the configured frontend URL
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        if (frontendUrl != null && !frontendUrl.isEmpty()) {
+            configuration.setAllowedOrigins(List.of(frontendUrl));
+        } else {
+            configuration.setAllowedOrigins(List.of());
+        }
+
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+}

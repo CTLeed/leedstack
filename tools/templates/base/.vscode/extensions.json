@@ -1,0 +1,17 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "ms-vscode.vscode-typescript-next"<% if (frontend === 'vue') { %>,
+    "Vue.volar"<% } %><% if (frontend === 'svelte') { %>,
+    "svelte.svelte-vscode"<% } %><% if (frontend === 'angular') { %>,
+    "Angular.ng-template"<% } %><% if (backend === 'python-fastapi') { %>,
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "ms-python.black-formatter"<% } %><% if (backend === 'java-spring') { %>,
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-spring-boot-dashboard"<% } %><% if (backend === 'go-echo') { %>,
+    "golang.go"<% } %>,
+    "ms-azuretools.vscode-docker"
+  ]
+}
